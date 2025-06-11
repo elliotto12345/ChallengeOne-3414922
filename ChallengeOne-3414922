@@ -1,0 +1,73 @@
+class TrieNode {
+    constructor() {
+      this.children = {};
+      this.isEndOfWord = false;
+    }
+  }
+  
+  class Trie {
+    constructor() {
+      this.root = new TrieNode();
+    }
+  
+    insert(word) {
+      let node = this.root;
+      for (let char of word) {
+        if (!node.children[char]) {
+          node.children[char] = new TrieNode();
+        }
+        node = node.children[char];
+      }
+      node.isEndOfWord = true;
+      return null; 
+    }
+  
+    search(word) {
+      let node = this._searchPrefix(word);
+      return node !== null && node.isEndOfWord;
+    }
+  
+    startsWith(prefix) {
+      return this._searchPrefix(prefix) !== null;
+    }
+  
+    _searchPrefix(prefix) {
+      let node = this.root;
+      for (let char of prefix) {
+        if (!node.children[char]) {
+          return null;
+        }
+        node = node.children[char];
+      }
+      return node;
+    }
+  }
+  
+
+  function runTrieOperations(operations, inputs) {
+    const results = [];
+    let trie = null;
+  
+    for (let i = 0; i < operations.length; i++) {
+      const op = operations[i];
+      const arg = inputs[i];
+  
+      if (op === "Trie") {
+        trie = new Trie();
+        results.push(null);
+      } else if (op === "insert") {
+        results.push(trie.insert(arg[0]));
+      } else if (op === "search") {
+        results.push(trie.search(arg[0]));
+      } else if (op === "startsWith") {
+        results.push(trie.startsWith(arg[0]));
+      }
+    }
+  
+    return results;
+  }
+  
+  
+  const ops = ["Trie", "insert", "search", "search", "startsWith", "insert", "search"];
+  const args = [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]];
+  console.log(runTrieOperations(ops, args));
